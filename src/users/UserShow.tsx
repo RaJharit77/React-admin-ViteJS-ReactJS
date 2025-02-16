@@ -9,7 +9,6 @@ export const UserShow: React.FC = (props) => (
             <EmailField source="email" />
             <TextField source="phone" />
             <TextField source="website" />
-            <TextField source="company.name" />
         </SimpleShowLayout>
     </Show>
 );

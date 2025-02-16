@@ -9,7 +9,6 @@ export const UserEdit: React.FC = (props) => (
             <TextInput source="email" />
             <TextInput source="phone" />
             <TextInput source="website" />
-            <TextInput source="company.name" />
         </SimpleForm>
     </Edit>
 );

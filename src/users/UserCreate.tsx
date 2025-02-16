@@ -8,7 +8,6 @@ export const UserCreate: React.FC = (props) => (
             <TextInput source="email" />
             <TextInput source="phone" />
             <TextInput source="website" />
-            <TextInput source="company.name" />
         </SimpleForm>
     </Create>
 );

@@ -1,13 +1,13 @@
 import { stringify } from 'query-string';
-import { DataProvider, fetchUtils } from 'react-admin';
+import { fetchUtils } from 'react-admin';
 
 const apiUrl = 'https://jsonplaceholder.typicode.com';
 const httpClient = fetchUtils.fetchJson;
 
-const dataProvider: DataProvider = {
-    getList: async (resource, params) => {
-        const { page, perPage } = params.pagination || { page: 1, perPage: 10 };
-        const { field, order } = params.sort || { field: '', order: '' };
+const dataProvider = {
+    getList: async (resource: string, params: any) => {
+        const { page, perPage } = params.pagination;
+        const { field, order } = params.sort;
         const query = {
             _sort: field,
             _order: order,
@@ -19,25 +19,25 @@ const dataProvider: DataProvider = {
         const { json } = await httpClient(url);
         return {
             data: json.map((resource: any) => ({ ...resource, id: resource.id })),
-            total: parseInt(json.length, 10),
+            total: 10,
         };
     },
 
-    getOne: async (resource, params) => {
+    getOne: async (resource: string, params: any) => {
         const { json } = await httpClient(`${apiUrl}/${resource}/${params.id}`);
         return { data: { ...json, id: json.id } };
     },
 
-    getMany: async (resource, params) => {
+    getMany: async (resource: string, params: any) => {
         const query = {
             id: params.ids,
         };
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
         const { json } = await httpClient(url);
-        return { data: json.map((resource: any) => ({ ...resource, id: resource.id })) };
+        return { data: json };
     },
 
-    getManyReference: async (resource, params) => {
+    getManyReference: async (resource: string, params: any) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
         const query = {
@@ -50,55 +50,55 @@ const dataProvider: DataProvider = {
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
         const { json } = await httpClient(url);
         return {
-            data: json.map((resource: any) => ({ ...resource, id: resource.id })),
-            total: parseInt(json.length, 10),
+            data: json,
+            total: 10,
         };
     },
 
-    update: async (resource, params) => {
+    create: async (resource: string, params: any) => {
+        const { json } = await httpClient(`${apiUrl}/${resource}`, {
+            method: 'POST',
+            body: JSON.stringify(params.data),
+        });
+        return { data: { ...params.data, id: json.id } };
+    },
+
+    update: async (resource: string, params: any) => {
         const { json } = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
             body: JSON.stringify(params.data),
         });
-        return { data: { ...json, id: json.id } };
+        return { data: json };
     },
 
-    updateMany: async (resource, params) => {
+    updateMany: async (resource: string, params: any) => {
         const responses = await Promise.all(
-            params.ids.map(id =>
+            params.ids.map((id: any) =>
                 httpClient(`${apiUrl}/${resource}/${id}`, {
                     method: 'PUT',
                     body: JSON.stringify(params.data),
                 })
             )
         );
-        return { data: responses.map(({ json }) => ({ ...json, id: json.id })) };
+        return { data: responses.map(({ json }) => json.id) };
     },
 
-    create: async (resource, params) => {
-        const { json } = await httpClient(`${apiUrl}/${resource}`, {
-            method: 'POST',
-            body: JSON.stringify(params.data),
-        });
-        return { data: { ...json, id: json.id } };
-    },
-
-    delete: async (resource, params) => {
+    delete: async (resource: string, params: any) => {
         const { json } = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'DELETE',
         });
-        return { data: { ...json, id: json.id } };
+        return { data: json };
     },
 
-    deleteMany: async (resource, params) => {
+    deleteMany: async (resource: string, params: any) => {
         const responses = await Promise.all(
-            params.ids.map(id =>
+            params.ids.map((id: any) =>
                 httpClient(`${apiUrl}/${resource}/${id}`, {
                     method: 'DELETE',
                 })
             )
         );
-        return { data: responses.map(({ json }) => ({ ...json, id: json.id })) };
+        return { data: responses.map(({ json }) => json.id) };
     },
 };
 
