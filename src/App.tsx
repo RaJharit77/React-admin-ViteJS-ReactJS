@@ -3,8 +3,8 @@ import { Admin, Resource } from 'react-admin';
 import dataProvider from './dataProvider';
 import { UserCreate } from './users/UserCreate';
 import { UserEdit } from './users/UserEdit';
+import { UserList } from './users/UserList';
 import { UserShow } from './users/UserShow';
-import { UserList } from './users/userList';
 
 const App: React.FC = () => (
   <Admin dataProvider={dataProvider}>
