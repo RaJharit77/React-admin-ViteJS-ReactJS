@@ -16,7 +16,7 @@ const dataProvider = {
         };
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
 
-        const { json } = await httpClient(url);
+        const { json } = (await httpClient(url));
         return {
             data: json.map((resource: any) => ({ ...resource, id: resource.id })),
             total: 10,
